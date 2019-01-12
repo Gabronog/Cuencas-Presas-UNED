@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1547312511 source:c:\prk\p4-gabriel\p4-gabriel.cpp
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<string.h>
+	<ctype.h>
+	<windows.h>
+	"Cuenca.h"
+
+1547310256 c:\prk\p4-gabriel\cuenca.h
+
+1547312441 source:c:\prk\p4-gabriel\cuenca.cpp
+	<stdio.h>
+	"Cuenca.h"
+	<ctype.h>
+	<windows.h>
+
