@@ -46,6 +46,8 @@ void imprimirMenu(){
   printf("\n\n");
 
   }
+
+
 void bienvenida(){
   system("COLOR F4");
   printf("\n\n          Bienvenido al programa de gestion de Cuencas y presas.\n");
@@ -53,6 +55,8 @@ void bienvenida(){
   printf("          Desarrollado por Gabriel Noguerales");
   Sleep(1000);
   }
+
+
 char salida(){
   char respuesta;
   system("@cls||clear");
@@ -77,14 +81,22 @@ void analizarRespuesta(TipoDato &dato,char r){
               Sleep(3000);
               break;
 
-  }}
+  }
+}
+
+
 void menu() {
   char r;
   while(r!='S'){
     imprimirMenu();
     analizarRespuesta(Datos,respuestaUsuario());
     r = salida();
-}}
+
+  }
+}
+
+
+
 int main() {
   bienvenida();
   menu();
