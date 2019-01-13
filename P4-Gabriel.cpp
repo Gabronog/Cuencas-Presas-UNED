@@ -1,9 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
-#include <string.h>
-#include <ctype.h>
-#include <windows.h>
+#include <stdio.h> //printf & scanf
+#include <conio.h> //getch
+#include <string.h> //strncmp & strcpy
+#include <ctype.h> //toupper
+#include <windows.h> //system
 #include "Cuenca.h"
 
 int opcion;
@@ -11,20 +10,12 @@ TipoDato Datos;
 
 /*** Diseño del menu ***/
 
-char respuestaUsuario(){
-  char respuesta;
-  do{
-    SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),125);
-    printf("\n>>> ");
-    fflush(stdin);
-    scanf("%s",&respuesta);
-    respuesta = toupper(respuesta);
-    if(respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R'){
-      printf("Error: La opcion elegida no valida");
-    }
-  }while(respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R');
-  system("COLOR F9");
-  return respuesta;
+void bienvenida(){
+  system("COLOR F4");
+  printf("\n\n          Bienvenido al programa de gestion de Cuencas y presas.\n");
+  Sleep(2000);
+  printf("          Desarrollado por Gabriel Noguerales");
+  Sleep(1000);
   }
 
 void imprimirMenu(){
@@ -46,52 +37,64 @@ void imprimirMenu(){
   printf("\n\n");
 
   }
-
-
-void bienvenida(){
-  system("COLOR F4");
-  printf("\n\n          Bienvenido al programa de gestion de Cuencas y presas.\n");
-  Sleep(2000);
-  printf("          Desarrollado por Gabriel Noguerales");
-  Sleep(1000);
+/** Seleccion de opcion **/
+char respuestaUsuario(){
+  char respuesta;
+  do{
+    SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),125);
+    printf("\n>>> ");
+    fflush(stdin);
+    scanf("%s",&respuesta);
+    respuesta = toupper(respuesta);
+    if(respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R'){
+      printf("Error: La opcion elegida no valida");
+    }
+  }while(respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R');
+  system("COLOR F9");
+  return respuesta;
   }
 
 
+
+/** Tratamiento de la salida del usuario del programa **/
 char salida(){
   char respuesta;
   system("@cls||clear");
-  printf("%cEsta seguro que desea salir del programa (S/N)?",168);
+  printf("\n\n\t\t%cEsta seguro que desea salir del programa (S/N)?",168);
   do{
-  printf("\n>>> ");
+  printf("\n\t\t>>> ");
   fflush(stdin);
   scanf("%s",&respuesta);
   respuesta = toupper(respuesta); //Normalizamos el input a mayusculas
+  if(respuesta != 'S' && respuesta != 'N'){
+    printf("\t\tError: La opcion elegida no valida");
+  }
   }while(respuesta != 'S' && respuesta != 'N');
-  return respuesta;
-}
-void analizarRespuesta(TipoDato &dato,char r){
-    TipoNombre s;
+  return respuesta;}
+
+/** Ejecucion de la opcion elegida **/
+char analizarRespuesta(TipoDato &dato,char r){
+    char charSalida = 'A';
     switch(r){
     case 'A': system("@cls||clear"); fflush(stdin);
               dato.introducirCuenca();
-              printf("%s",dato.cuenca[0].nombreCuenca);
               Sleep(1000);
               break;
     case 'V': dato.verRegistros();
               Sleep(3000);
               break;
-
+    case 'S': charSalida = salida();
+              break;
   }
+  return charSalida;
 }
 
 
 void menu() {
-  char r;
+  char r = ' ';
   while(r!='S'){
     imprimirMenu();
-    analizarRespuesta(Datos,respuestaUsuario());
-    r = salida();
-
+    r = analizarRespuesta(Datos,respuestaUsuario());
   }
 }
 

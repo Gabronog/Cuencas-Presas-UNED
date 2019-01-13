@@ -17,7 +17,6 @@ typedef struct TipoRegistro{
 typedef char TipoNombre[100];
 
 typedef struct TipoPresa{
-  void introducirMedicion(int anio, int mes, int dia,int volumen);
   TipoNombre nombrePresa;
   int volumenMax;
   TipoRegistro registro[100];
@@ -37,4 +36,5 @@ typedef struct TipoDato{
     TipoDatoCuenca cuenca;
     void introducirCuenca();
     void verRegistros();
+    void introducirMedicion(int anio, int mes, int dia,int volumen);
   };
