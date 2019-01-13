@@ -10,15 +10,15 @@ TipoDato Datos;
 
 /*** Diseño del menu ***/
 
-void bienvenida(){
+void bienvenida() {
   system("COLOR F4");
   printf("\n\n          Bienvenido al programa de gestion de Cuencas y presas.\n");
   Sleep(2000);
   printf("          Desarrollado por Gabriel Noguerales");
   Sleep(1000);
-  }
+}
 
-void imprimirMenu(){
+void imprimirMenu() {
 
   fflush(stdin);
   system("@cls||clear");
@@ -36,57 +36,58 @@ void imprimirMenu(){
   printf("          :.........................................:\n");
   printf("\n\n");
 
-  }
+}
 /** Seleccion de opcion **/
-char respuestaUsuario(){
+char respuestaUsuario() {
   char respuesta;
-  do{
+  do {
     SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE),125);
     printf("\n>>> ");
     fflush(stdin);
     scanf("%s",&respuesta);
     respuesta = toupper(respuesta);
-    if(respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R'){
+    if (respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R') {
       printf("Error: La opcion elegida no valida");
     }
-  }while(respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R');
+  } while (respuesta != 'A' && respuesta != 'S' && respuesta != 'N' && respuesta != 'V' && respuesta != 'R');
   system("COLOR F9");
   return respuesta;
-  }
+}
 
 
 
 /** Tratamiento de la salida del usuario del programa **/
-char salida(){
+char salida() {
   char respuesta;
   system("@cls||clear");
   printf("\n\n\t\t%cEsta seguro que desea salir del programa (S/N)?",168);
-  do{
-  printf("\n\t\t>>> ");
-  fflush(stdin);
-  scanf("%s",&respuesta);
-  respuesta = toupper(respuesta); //Normalizamos el input a mayusculas
-  if(respuesta != 'S' && respuesta != 'N'){
-    printf("\t\tError: La opcion elegida no valida");
-  }
-  }while(respuesta != 'S' && respuesta != 'N');
-  return respuesta;}
+  do {
+    printf("\n\t\t>>> ");
+    fflush(stdin);
+    scanf("%s",&respuesta);
+    respuesta = toupper(respuesta); //Normalizamos el input a mayusculas
+    if (respuesta != 'S' && respuesta != 'N') {
+      printf("\t\tError: La opcion elegida no valida");
+    }
+  } while (respuesta != 'S' && respuesta != 'N');
+  return respuesta;
+}
 
 /** Ejecucion de la opcion elegida **/
-char analizarRespuesta(TipoDato &dato,char r){
-    char charSalida = 'A';
-    switch(r){
-    case 'A': system("@cls||clear"); fflush(stdin);
-              dato.introducirCuenca();
-              Sleep(1000);
-              break;
-    case 'V': dato.verRegistros();
-              Sleep(1000);
-              break;
-    case 'S': charSalida = salida();
-              break;
-    case 'N': system("@cls||clear"); fflush(stdin); dato.introducirMedicion(); Sleep(1000);
-              break;
+char analizarRespuesta(TipoDato &dato,char r) {
+  char charSalida = 'A';
+  switch (r) {
+  case 'A': system("@cls||clear"); fflush(stdin);
+    dato.introducirCuenca();
+    Sleep(1000);
+    break;
+  case 'V': dato.verRegistros();
+    Sleep(1000);
+    break;
+  case 'S': charSalida = salida();
+    break;
+  case 'N': system("@cls||clear"); fflush(stdin); dato.introducirMedicion(); Sleep(1000);
+    break;
   }
   return charSalida;
 }
@@ -94,7 +95,7 @@ char analizarRespuesta(TipoDato &dato,char r){
 
 void menu() {
   char r = ' ';
-  while(r!='S'){
+  while (r!='S') {
     imprimirMenu();
     r = analizarRespuesta(Datos,respuestaUsuario());
   }

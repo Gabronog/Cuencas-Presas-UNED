@@ -2,12 +2,18 @@
 #include "Cuenca.h"
 #include <ctype.h>
 #include <windows.h>
+
+int auxCuenca;
+
 void TipoDato::verRegistros() {
-  for(int i=0; i<3; i++){
-    for(int j=0;j<3;j++){
-      if(cuenca[i].contieneDatos && cuenca[i].presa[j].contieneDatos){
-      printf("La presa %s - %s tiene una capacidad de %d \n",cuenca[i].nombreCuenca,cuenca[i].presa[j].nombrePresa,cuenca[i].presa[j].volumenMax);
-}}}}
+  for (int i=0; i<3; i++) {
+    for (int j=0;j<3;j++) {
+      if (cuenca[i].contieneDatos && cuenca[i].presa[j].contieneDatos) {
+        printf("La presa %s - %s tiene una capacidad de %d \n",cuenca[i].nombreCuenca,cuenca[i].presa[j].nombrePresa,cuenca[i].presa[j].volumenMax);
+      }
+    }
+  }
+}
 
 /** Introducir datos dentro de nuestro TipoDato.cuenca[] **/
 void TipoDato::introducirCuenca() {
@@ -104,9 +110,12 @@ void TipoDato::introducirCuenca() {
 }
 
 /**  Como pueden haber 2 presas con el mismo nombre siempre y cuando este en cuencas distintas solicitaremos tambien la cuenca para introducir una medición **/
-void TipoDato::introducirMedicion(){
+void TipoDato::introducirMedicion() {
   int volumenMedido, anio, dia, mes;
   TipoNombre nombrePresa, nombreCuenca;
+  TipoFecha fecha;
+  bool existe = false;
+  bool escrito = false;
 
   printf("\n\n");
   printf("\t\t..........................................................\n");
@@ -141,8 +150,10 @@ void TipoDato::introducirMedicion(){
   printf("\t\t             Volumen medido en la Presa: %d                     \n",volumenMedido);
   printf("\t\t     Por favor introduzca el dia que se produjo la medicion  \n");
   printf("\t\t.......................................................... \n");
-  do{printf("\t\t\n>>> ");
-  scanf("%d",&dia);}while(dia>31 || dia<1);
+  do {
+    printf("\t\t\n>>> ");
+    scanf("%d",&dia);
+  } while (dia>31 || dia<1);
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -152,8 +163,10 @@ void TipoDato::introducirMedicion(){
   printf("\t\t             Dia de la medicion: %d                     \n",dia);
   printf("\t\t     Por favor introduzca el mes que se produjo la medicion  \n");
   printf("\t\t.......................................................... \n");
-  do{printf("\t\t\n>>> ");
-  scanf("%d",&mes);}while(mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31));
+  do {
+    printf("\t\t\n>>> ");
+    scanf("%d",&mes);
+  } while (mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31));
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -176,6 +189,69 @@ void TipoDato::introducirMedicion(){
   printf("\t\t             Mes de la medicion: %d                     \n",mes);
   printf("\t\t             A%co de la medicion: %d                     \n",164,mes);
   printf("\t\t.......................................................... \n");
+  fecha.anio = anio;
+  fecha.mes = mes;
+  fecha.dia = dia;
+  for (int i=0;i<3;i++) {
+    if (cuenca[i].contieneDatos==true && escrito == false) {
+      //Hay alguna cuenca almacenada con el mismo nombre?
+      if (strcmp(cuenca[i].nombreCuenca,nombreCuenca)==0) {
+        existe = true;
+        for (int j=0;j<5;j++) {
+          //Hay alguna presa almacenada con el mismo nombre?
+          if (strcmp(cuenca[i].presa[j].nombrePresa,nombrePresa)==0) {
+            if (cuenca[i].presa[j].volumenMax>=volumenMedido) {
+              for (int k=0;k<100;k++) {
+                if (cuenca[i].presa[j].registro[k].contieneDatos == false) {
+                  if (k == 0 ||
+                      (cuenca[i].presa[j].registro[k-1].fecha.anio < fecha.anio) ||
+                      ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes < fecha.mes)) ||
+                      ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes == fecha.mes) && (cuenca[i].presa[j].registro[k-1].fecha.anio < fecha.anio))) {
+                    if (fecha.comprobarFecha()) {
+                      cuenca[i].presa[j].registro[k].volumenMedido = volumenMedido;
+                      cuenca[i].presa[j].registro[k].fecha.anio = fecha.anio;
+                      cuenca[i].presa[j].registro[k].fecha.mes = fecha.mes;
+                      cuenca[i].presa[j].registro[k].fecha.dia = fecha.dia;
+                      cuenca[i].presa[j].registro[k].contieneDatos = true;
+                      escrito = true;
+                    }
+                  }
+                }
+              }
+            } else {
+              printf("El volumen medido no puede exceder la capacidad de la presa");
+            }
+          }
+        }
+      }
+    }
+  }
+  if (existe == false) {
+    printf("noexiste");
+  }
 
   system("pause");
+}
+
+
+bool TipoFecha::comprobarFecha() {
+  int AnnoActual;
+  int MesActual;
+  int DiaActual;
+
+  SYSTEMTIME str_t;
+  GetSystemTime(&str_t);
+  AnnoActual=str_t.wYear;
+  MesActual=str_t.wMonth;
+  DiaActual=str_t.wDay;
+
+  if (anio>AnnoActual) { //Comparamos la fecha introducida con la actual
+    return false;
+  } else if ((mes>MesActual) && (anio==AnnoActual)) {
+    return false;
+  } else if ((dia>DiaActual) && (mes==MesActual) && (anio==AnnoActual)) {
+    return false;
+  } else {
+    return true; //solo devuelve true si la fecha introducida es igual o inferior a la actual.
+  }
 }
