@@ -6,6 +6,7 @@ typedef char TipoNombre[100];
 typedef struct TipoFecha {
   int dia,mes,anio;
 
+  bool comprobarBisiesto();
   bool comprobarFecha();
 };
 

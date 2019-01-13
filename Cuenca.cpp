@@ -114,7 +114,8 @@ void TipoDato::introducirMedicion() {
   int volumenMedido, anio, dia, mes;
   TipoNombre nombrePresa, nombreCuenca;
   TipoFecha fecha;
-  bool existe = false;
+  bool cuencaEncontrada = false;
+  bool presaEncontrada = false;
   bool escrito = false;
 
   printf("\n\n");
@@ -187,7 +188,7 @@ void TipoDato::introducirMedicion() {
   printf("\t\t             Volumen medido en la Presa: %d                     \n",volumenMedido);
   printf("\t\t             Dia de la medicion: %d                     \n",dia);
   printf("\t\t             Mes de la medicion: %d                     \n",mes);
-  printf("\t\t             A%co de la medicion: %d                     \n",164,mes);
+  printf("\t\t             A%co de la medicion: %d                     \n",164,anio);
   printf("\t\t.......................................................... \n");
   fecha.anio = anio;
   fecha.mes = mes;
@@ -196,38 +197,42 @@ void TipoDato::introducirMedicion() {
     if (cuenca[i].contieneDatos==true && escrito == false) {
       //Hay alguna cuenca almacenada con el mismo nombre?
       if (strcmp(cuenca[i].nombreCuenca,nombreCuenca)==0) {
-        existe = true;
+        cuencaEncontrada = true;
         for (int j=0;j<5;j++) {
           //Hay alguna presa almacenada con el mismo nombre?
           if (strcmp(cuenca[i].presa[j].nombrePresa,nombrePresa)==0) {
+            presaEncontrada = true;
             if (cuenca[i].presa[j].volumenMax>=volumenMedido) {
               for (int k=0;k<100;k++) {
-                if (cuenca[i].presa[j].registro[k].contieneDatos == false) {
+                if (cuenca[i].presa[j].registro[k].contieneDatos == false && escrito == false) {
                   if (k == 0 ||
                       (cuenca[i].presa[j].registro[k-1].fecha.anio < fecha.anio) ||
                       ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes < fecha.mes)) ||
-                      ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes == fecha.mes) && (cuenca[i].presa[j].registro[k-1].fecha.anio < fecha.anio))) {
+                      ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes == fecha.mes) && (cuenca[i].presa[j].registro[k-1].fecha.dia < fecha.dia))) {
                     if (fecha.comprobarFecha()) {
-                      cuenca[i].presa[j].registro[k].volumenMedido = volumenMedido;
-                      cuenca[i].presa[j].registro[k].fecha.anio = fecha.anio;
-                      cuenca[i].presa[j].registro[k].fecha.mes = fecha.mes;
-                      cuenca[i].presa[j].registro[k].fecha.dia = fecha.dia;
-                      cuenca[i].presa[j].registro[k].contieneDatos = true;
-                      escrito = true;
+                      if(fecha.dia < 29 || fecha.mes != 2 || fecha.comprobarBisiesto()){
+                        cuenca[i].presa[j].registro[k].volumenMedido = volumenMedido;
+                        cuenca[i].presa[j].registro[k].fecha.anio = fecha.anio;
+                        cuenca[i].presa[j].registro[k].fecha.mes = fecha.mes;
+                        cuenca[i].presa[j].registro[k].fecha.dia = fecha.dia;
+                        cuenca[i].presa[j].registro[k].contieneDatos = true;
+                        escrito = true;
+                        printf("Guardado el registro!\n");
+                      }else{printf("\nLa fecha \" %d de Febrero no es valida en un a%co no bisiesto \n",fecha.dia,164);escrito=true;}
                     }
                   }
                 }
               }
             } else {
-              printf("El volumen medido no puede exceder la capacidad de la presa");
+              printf("\nEl volumen medido no puede exceder la capacidad de la presa\n");
             }
           }
         }
       }
     }
   }
-  if (existe == false) {
-    printf("noexiste");
+  if (cuencaEncontrada == false) {
+    printf("\nNo se ha encontrado la cuenca %d\n",nombreCuenca);
   }
 
   system("pause");
@@ -253,5 +258,12 @@ bool TipoFecha::comprobarFecha() {
     return false;
   } else {
     return true; //solo devuelve true si la fecha introducida es igual o inferior a la actual.
+  }
+}
+bool TipoFecha::comprobarBisiesto() { //Función que comprueba si el año es bisiesto o no.
+  if (((anio%4==0)&& (anio%100)!=0)||(anio%400)==0) {
+    return true;
+  } else {
+    return false;
   }
 }
