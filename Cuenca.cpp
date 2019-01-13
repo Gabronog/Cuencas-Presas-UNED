@@ -3,8 +3,13 @@
 #include <ctype.h>
 #include <windows.h>
 void TipoDato::verRegistros() {
-  printf("La presa %s - %s tiene una capacidad de %d ",cuenca[0].nombreCuenca,cuenca[0].presa[0].nombrePresa,cuenca[0].presa[0].volumenMax);
-}
+  for(int i=0; i<3; i++){
+    for(int j=0;j<3;j++){
+      if(cuenca[i].contieneDatos && cuenca[i].presa[j].contieneDatos){
+      printf("La presa %s - %s tiene una capacidad de %d \n",cuenca[i].nombreCuenca,cuenca[i].presa[j].nombrePresa,cuenca[i].presa[j].volumenMax);
+}}}}
+
+/** Introducir datos dentro de nuestro TipoDato.cuenca[] **/
 void TipoDato::introducirCuenca() {
   TipoNombre nombreCuenca, nombrePresa;
   bool existente = false;  //Pondremos en true cuando hayamos una presa con ese nombre para prevenir tener 2 presas con el mismo nombre
@@ -22,7 +27,7 @@ void TipoDato::introducirCuenca() {
   printf("\t\t:     Por favor introduzca el nombre de la cuenca        :\n");
   printf("\t\t.......................................................... \n");
   printf("\t\t\n>>> ");
-  scanf("%s",&nombreCuenca);
+  scanf("%s",nombreCuenca);
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -30,7 +35,7 @@ void TipoDato::introducirCuenca() {
   printf("\t\t     Por favor introduzca el nombre de la Presa  \n");
   printf("\t\t.......................................................... \n");
   printf("\t\t\n>>> ");
-  scanf("%s",&nombrePresa);
+  scanf("%s",nombrePresa);
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -47,6 +52,7 @@ void TipoDato::introducirCuenca() {
   printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
   printf("\t\t             Capacidad de la Presa: %d                     \n",volumenMaxPresa);
   printf("\t\t.......................................................... \n");
+  system("pause");
   for (int i=0;i<3;i++) {
     if (cuenca[i].contieneDatos==true) {
       //Hay alguna cuenca almacenada con el mismo nombre?
@@ -55,8 +61,8 @@ void TipoDato::introducirCuenca() {
         for (int j=0;j<5;j++) {
           //Hay alguna presa almacenada con el mismo nombre?
           if (strcmp(cuenca[i].presa[j].nombrePresa,nombrePresa)==0) {
-            printf("\n\n La presa que intenta registrar ya ha sido registrada previamente");
-            Sleep(3000);
+            printf("\n\n La presa que intenta registrar ya ha sido registrada previamente\n");
+            system("pause");
             existente = true;
           }
         }
@@ -68,6 +74,8 @@ void TipoDato::introducirCuenca() {
               strcpy(cuenca[i].presa[j].nombrePresa,nombrePresa);
               cuenca[i].presa[j].contieneDatos = true;
               escrito=true;
+              printf("\tGuardado!\n");
+              system("pause");
             }
           }
         }
@@ -82,6 +90,8 @@ void TipoDato::introducirCuenca() {
         cuenca[i].presa[0].volumenMax = volumenMaxPresa;
         strcpy(cuenca[i].presa[0].nombrePresa,nombrePresa);
         cuenca[i].presa[0].contieneDatos = true;
+        printf("\tGuardado!\n");
+        system("pause");
       }
     }
     //Si no hay espacio para la cuenca que desea insertar
@@ -91,4 +101,81 @@ void TipoDato::introducirCuenca() {
       Sleep(2000);
     }
   }
+}
+
+/**  Como pueden haber 2 presas con el mismo nombre siempre y cuando este en cuencas distintas solicitaremos tambien la cuenca para introducir una medición **/
+void TipoDato::introducirMedicion(){
+  int volumenMedido, anio, dia, mes;
+  TipoNombre nombrePresa, nombreCuenca;
+
+  printf("\n\n");
+  printf("\t\t..........................................................\n");
+  printf("\t\t:                    Nueva medicion                      :\n");
+  printf("\t\t:       Por favor introduzca el nombre de la cuenca      :\n");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t\n>>> ");
+  scanf("%s",nombreCuenca);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t                    Nueva medicion                      \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t     Por favor introduzca el nombre de la Presa  \n");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t\n>>> ");
+  scanf("%s",nombrePresa);
+
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t                        Nueva medicion                    \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t     Por favor introduzca el volumen medido en la presa  \n");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t\n>>> ");
+  scanf("%d",&volumenMedido);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t               Alta de cuenca/Presa               \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t             Volumen medido en la Presa: %d                     \n",volumenMedido);
+  printf("\t\t     Por favor introduzca el dia que se produjo la medicion  \n");
+  printf("\t\t.......................................................... \n");
+  do{printf("\t\t\n>>> ");
+  scanf("%d",&dia);}while(dia>31 || dia<1);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t               Alta de cuenca/Presa               \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t             Volumen medido en la Presa: %d                     \n",volumenMedido);
+  printf("\t\t             Dia de la medicion: %d                     \n",dia);
+  printf("\t\t     Por favor introduzca el mes que se produjo la medicion  \n");
+  printf("\t\t.......................................................... \n");
+  do{printf("\t\t\n>>> ");
+  scanf("%d",&mes);}while(mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31));
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t               Alta de cuenca/Presa               \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t             Volumen medido en la Presa: %d                     \n",volumenMedido);
+  printf("\t\t             Dia de la medicion: %d                     \n",dia);
+  printf("\t\t             Mes de la medicion: %d                     \n",mes);
+  printf("\t\t     Por favor introduzca el a%co que se produjo la medicion  \n",164);
+  printf("\t\t.......................................................... \n");
+  printf("\t\t\n>>> ");
+  scanf("%d",&anio);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t               Alta de cuenca/Presa               \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t             Volumen medido en la Presa: %d                     \n",volumenMedido);
+  printf("\t\t             Dia de la medicion: %d                     \n",dia);
+  printf("\t\t             Mes de la medicion: %d                     \n",mes);
+  printf("\t\t             A%co de la medicion: %d                     \n",164,mes);
+  printf("\t\t.......................................................... \n");
+
+  system("pause");
 }

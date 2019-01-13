@@ -81,9 +81,11 @@ char analizarRespuesta(TipoDato &dato,char r){
               Sleep(1000);
               break;
     case 'V': dato.verRegistros();
-              Sleep(3000);
+              Sleep(1000);
               break;
     case 'S': charSalida = salida();
+              break;
+    case 'N': system("@cls||clear"); fflush(stdin); dato.introducirMedicion(); Sleep(1000);
               break;
   }
   return charSalida;
@@ -103,5 +105,6 @@ void menu() {
 int main() {
   bienvenida();
   menu();
+  //Getch maneja la salida del programa
   getch();
 }

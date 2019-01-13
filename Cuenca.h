@@ -1,11 +1,8 @@
 #pragma once
 typedef enum TipoMes {Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre};
-typedef enum TipoDia {Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo};
 
 typedef struct TipoFecha{
-  TipoMes mes;
-  TipoDia dia;
-  int anio;
+  int dia,mes,anio;
 
   void comprobarFecha();
   };
@@ -36,5 +33,5 @@ typedef struct TipoDato{
     TipoDatoCuenca cuenca;
     void introducirCuenca();
     void verRegistros();
-    void introducirMedicion(int anio, int mes, int dia,int volumen);
+    void introducirMedicion();
   };
