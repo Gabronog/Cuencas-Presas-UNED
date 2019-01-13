@@ -209,7 +209,7 @@ void TipoDato::introducirMedicion() {
                       (cuenca[i].presa[j].registro[k-1].fecha.anio < fecha.anio) ||
                       ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes < fecha.mes)) ||
                       ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes == fecha.mes) && (cuenca[i].presa[j].registro[k-1].fecha.dia < fecha.dia))) {
-                    if (fecha.comprobarFecha()) {
+                      if (fecha.comprobarFecha()) {
                       if(fecha.dia < 29 || fecha.mes != 2 || fecha.comprobarBisiesto()){
                         cuenca[i].presa[j].registro[k].volumenMedido = volumenMedido;
                         cuenca[i].presa[j].registro[k].fecha.anio = fecha.anio;
@@ -232,13 +232,85 @@ void TipoDato::introducirMedicion() {
     }
   }
   if (cuencaEncontrada == false) {
-    printf("\nNo se ha encontrado la cuenca %d\n",nombreCuenca);
+    printf("\nNo se ha encontrado la cuenca %s\n",nombreCuenca);
   }
 
   system("pause");
 }
 
+void TipoDato::comprobarRegistros() {
+  int anio, dia, mes;
+  TipoNombre nombrePresa, nombreCuenca;
+  TipoFecha fecha;
 
+  printf("\n\n");
+  printf("\t\t..........................................................\n");
+  printf("\t\t:                Consulta de mediciones                  :\n");
+  printf("\t\t:       Por favor introduzca el nombre de la cuenca      :\n");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t\n>>> ");
+  scanf("%s",nombreCuenca);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t                  Consulta de mediciones                      \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t     Por favor introduzca el nombre de la Presa  \n");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t\n>>> ");
+  scanf("%s",nombrePresa);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t                  Consulta de mediciones                      \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t     Por favor introduzca el dia a partir del cual quiere consultar las mediciones  \n");
+  printf("\t\t.......................................................... \n");
+  do {
+    printf("\t\t\n>>> ");
+    scanf("%d",&dia);
+  } while (dia>31 || dia<1);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t                  Consulta de mediciones                      \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t             Dia inicial de consulta de las mediciones: %d                     \n",dia);
+  printf("\t     Por favor introduzca el mes a partir del cual quiere consultar las mediciones  \n");
+  printf("\t\t.......................................................... \n");
+  do {
+    printf("\t\t\n>>> ");
+    scanf("%d",&mes);
+  } while (mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31));
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t               Alta de cuenca/Presa               \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t             Dia inicial de consulta de las mediciones: %d                     \n",dia);
+  printf("\t\t             Mes inicial de consulta de las mediciones: %d                     \n",mes);
+  printf("\t     Por favor introduzca el a%co a partir del cual quiere consultar las mediciones  \n",164);
+  printf("\t\t.......................................................... \n");
+  printf("\t\t\n>>> ");
+  scanf("%d",&anio);
+  system("@cls||clear");
+  printf("\n\n\t\t.......................................................... \n");
+  printf("\t\t                  Consulta de mediciones                      \n");
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
+  printf("\t\t             Dia inicial de consulta de las mediciones: %d                     \n",dia);
+  printf("\t\t             Mes inicial de consulta de las mediciones: %d                     \n",mes);
+  printf("\t\t             A%co inicial de consulta de las mediciones: %d                     \n",164,anio);
+  printf("\t\t.......................................................... \n");
+  fecha.anio = anio;
+  fecha.mes = mes;
+  fecha.dia = dia;
+  if(fecha.comprobarFecha() == true && (fecha.dia < 29 || fecha.mes != 2 || fecha.comprobarBisiesto())){
+
+
+    }
+}
+
+/** Comprobacion de que la fecha es anterior a la fecha actual **/
 bool TipoFecha::comprobarFecha() {
   int AnnoActual;
   int MesActual;
@@ -260,6 +332,8 @@ bool TipoFecha::comprobarFecha() {
     return true; //solo devuelve true si la fecha introducida es igual o inferior a la actual.
   }
 }
+
+/** Comprueba si el año introducido es bisiesto **/
 bool TipoFecha::comprobarBisiesto() { //Función que comprueba si el año es bisiesto o no.
   if (((anio%4==0)&& (anio%100)!=0)||(anio%400)==0) {
     return true;

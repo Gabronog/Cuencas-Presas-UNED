@@ -81,7 +81,7 @@ char analizarRespuesta(TipoDato &dato,char r) {
     dato.introducirCuenca();
     Sleep(1000);
     break;
-  case 'V': dato.verRegistros();
+  case 'V': dato.comprobarRegistros();
     Sleep(1000);
     break;
   case 'S': charSalida = salida();

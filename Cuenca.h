@@ -36,7 +36,10 @@ typedef TipoCuenca TipoDatoCuenca [3];
 
 typedef struct TipoDato {
   TipoDatoCuenca cuenca;
+
+
   void introducirCuenca();
   void verRegistros();
   void introducirMedicion();
+  void comprobarRegistros();
 };
