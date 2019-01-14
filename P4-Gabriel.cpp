@@ -18,6 +18,7 @@ void bienvenida() {
   Sleep(1000);
 }
 
+
 void imprimirMenu() {
 
   fflush(stdin);
@@ -37,6 +38,8 @@ void imprimirMenu() {
   printf("\n\n");
 
 }
+
+
 /** Seleccion de opcion **/
 char respuestaUsuario() {
   char respuesta;
@@ -81,7 +84,7 @@ char analizarRespuesta(TipoDato &dato,char r) {
     dato.introducirCuenca();
     Sleep(1000);
     break;
-  case 'V': dato.comprobarRegistros();
+  case 'R': dato.comprobarRegistros();
     Sleep(1000);
     break;
   case 'S': charSalida = salida();

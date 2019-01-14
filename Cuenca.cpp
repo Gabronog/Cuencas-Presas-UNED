@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include <windows.h>
 
-int auxCuenca;
 
 void TipoDato::verRegistros() {
   for (int i=0; i<3; i++) {
@@ -109,7 +108,10 @@ void TipoDato::introducirCuenca() {
   }
 }
 
-/**  Como pueden haber 2 presas con el mismo nombre siempre y cuando este en cuencas distintas solicitaremos tambien la cuenca para introducir una medición **/
+/**
+Introducir datos de las mediciones a una presa
+Como pueden haber 2 presas con el mismo nombre en cuencas distintas
+solicitaremos tambien la cuenca para introducir una medición **/
 void TipoDato::introducirMedicion() {
   int volumenMedido, anio, dia, mes;
   TipoNombre nombrePresa, nombreCuenca;
@@ -205,21 +207,36 @@ void TipoDato::introducirMedicion() {
             if (cuenca[i].presa[j].volumenMax>=volumenMedido) {
               for (int k=0;k<100;k++) {
                 if (cuenca[i].presa[j].registro[k].contieneDatos == false && escrito == false) {
+                  /*
+                    Comprobamos
+
+
+                  */
                   if (k == 0 ||
                       (cuenca[i].presa[j].registro[k-1].fecha.anio < fecha.anio) ||
                       ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes < fecha.mes)) ||
                       ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes == fecha.mes) && (cuenca[i].presa[j].registro[k-1].fecha.dia < fecha.dia))) {
-                      if (fecha.comprobarFecha()) {
-                      if(fecha.dia < 29 || fecha.mes != 2 || fecha.comprobarBisiesto()){
+                    if (fecha.comprobarFecha()) {
+                      if (fecha.dia < 29 || fecha.mes != 2 || fecha.comprobarBisiesto()) {
                         cuenca[i].presa[j].registro[k].volumenMedido = volumenMedido;
                         cuenca[i].presa[j].registro[k].fecha.anio = fecha.anio;
                         cuenca[i].presa[j].registro[k].fecha.mes = fecha.mes;
                         cuenca[i].presa[j].registro[k].fecha.dia = fecha.dia;
                         cuenca[i].presa[j].registro[k].contieneDatos = true;
+                        cuenca[i].presa[j].registro[k].ultimoRegistro = true;
+
+                        if (k!=0) {
+                          cuenca[i].presa[j].registro[k-1].ultimoRegistro = false;
+                        }
                         escrito = true;
                         printf("Guardado el registro!\n");
-                      }else{printf("\nLa fecha \" %d de Febrero no es valida en un a%co no bisiesto \n",fecha.dia,164);escrito=true;}
+                      } else {
+                        printf("\nLa fecha \" %d de Febrero no es valida en un a%co no bisiesto \n",fecha.dia,164);escrito=true;
+                      }
                     }
+                  } else {
+                    escrito = true;
+                    printf("La fecha del registro debe ser posterior a la fecha del ultimo registro");
                   }
                 }
               }
@@ -239,10 +256,17 @@ void TipoDato::introducirMedicion() {
 }
 
 void TipoDato::comprobarRegistros() {
-  int anio, dia, mes;
+
+  int anio, dia, mes, media;
+  int totalVolMax = 0;
+  int totalVolMedido = 0;
   TipoNombre nombrePresa, nombreCuenca;
   TipoFecha fecha;
+  bool cuencaRegistrada = false;
+  bool presaRegistrada = false;
 
+  /** Introduccion de datos **/
+  system("@cls||clear");
   printf("\n\n");
   printf("\t\t..........................................................\n");
   printf("\t\t:                Consulta de mediciones                  :\n");
@@ -304,10 +328,93 @@ void TipoDato::comprobarRegistros() {
   fecha.anio = anio;
   fecha.mes = mes;
   fecha.dia = dia;
-  if(fecha.comprobarFecha() == true && (fecha.dia < 29 || fecha.mes != 2 || fecha.comprobarBisiesto())){
-
-
+  if (fecha.comprobarFecha() == true && (fecha.dia < 29 || fecha.mes != 2 || fecha.comprobarBisiesto())) {
+    for (int i=0;i<3;i++) {
+      if (strcmp(cuenca[i].nombreCuenca,nombreCuenca)==0) {
+        /** Existen registros de la cuenca **/
+        cuencaRegistrada = true;
+        for (int j=0;j<5;j++) {
+          if (strcmp(cuenca[i].presa[j].nombrePresa,nombrePresa)==0) {
+            /** Existen registros de la presa y de la cuenca
+                Mostraremos los registros de la presa
+                y el Total de la cuenca y de la region
+            **/
+            presaRegistrada = true;
+            printf("\n\n");
+            printf("\t\t    Cuenca   |    Presa    |    Volumen    |  Fecha   \n");
+            printf("\t\t ------------|-------------|---------------|----------\n");
+            for (int k = 0 ;k < 100;k++) {
+              if (cuenca[i].presa[j].registro[k].contieneDatos) {
+                media = (100*cuenca[i].presa[j].registro[k].volumenMedido) / cuenca[i].presa[j].volumenMax;
+                printf("\t\t  %s       |   %s   |   %d - %d%c  | %d/%d/%d \n",cuenca[i].nombreCuenca,cuenca[i].presa[j].nombrePresa,cuenca[i].presa[j].registro[k].volumenMedido,media,37,cuenca[i].presa[j].registro[k].fecha.dia,cuenca[i].presa[j].registro[k].fecha.mes,cuenca[i].presa[j].registro[k].fecha.anio);
+              }
+            }
+          }
+        }
+        if (presaRegistrada == true) {
+          for (int j=0;j<5;j++) {
+            if (cuenca[i].presa[j].contieneDatos) {
+              totalVolMax = totalVolMax + cuenca[i].presa[j].volumenMax;
+              for (int k = 0 ;k < 100;k++) {
+                if (cuenca[i].presa[j].registro[k].contieneDatos && cuenca[i].presa[j].registro[k].ultimoRegistro) {
+                  totalVolMedido = totalVolMedido + cuenca[i].presa[j].registro[k].volumenMedido;
+                }
+              }
+            }
+          }
+          media = (totalVolMedido*100)/totalVolMax;
+          printf("\t\t  %s       |    TOTAL    |   %d - %d%c  |---------- \n",cuenca[i].nombreCuenca,totalVolMedido,media,37);
+        }
+      }
     }
+    if (presaRegistrada == false) {
+      /** No existen registros de la cuenca ni de la presa
+          Mostraremos todos los registros de la region
+      **/
+      if (cuencaRegistrada == false) {
+        printf("\n\n");
+        printf("\t\t    Cuenca   |    Presa    |    Volumen    |  Fecha   \n");
+        printf("\t\t ------------|-------------|---------------|----------\n");
+      } else {
+        /** Existen registros de la cuenca pero no de la presa
+            Mostraremos todos los registros de la cuenca posterior a esa fecha
+        **/
+        printf("\n\n");
+        printf("\t\t    Cuenca   |    Presa    |    Volumen    |  Fecha   \n");
+        printf("\t\t ------------|-------------|---------------|----------\n");
+        for (int i=0;i<3;i++) {
+          if (strcmp(cuenca[i].nombreCuenca,nombreCuenca)==0) {
+            for (int j=0;j<5;j++) {
+              if (cuenca[i].presa[j].contieneDatos) {
+                totalVolMax = totalVolMax + cuenca[i].presa[j].volumenMax;
+                for (int k = 0 ;k < 100;k++) {
+                  if (cuenca[i].presa[j].registro[k].contieneDatos && cuenca[i].presa[j].registro[k].ultimoRegistro) {
+                    totalVolMedido = totalVolMedido + cuenca[i].presa[j].registro[k].volumenMedido;
+                  }
+                }
+              }
+            }
+            media = (totalVolMedido*100)/totalVolMax;
+            printf("\t\t  %s       |    TOTAL    |   %d - %d%c  |---------- \n",cuenca[i].nombreCuenca,totalVolMedido,media,37);
+          }
+        }
+      }
+    }
+    for(int i=0;i<3;i++){
+    for (int j=0;j<5;j++) {
+      if (cuenca[i].presa[j].contieneDatos) {
+        totalVolMax = totalVolMax + cuenca[i].presa[j].volumenMax;
+          for (int k = 0 ;k < 100;k++) {
+            if (cuenca[i].presa[j].registro[k].contieneDatos && cuenca[i].presa[j].registro[k].ultimoRegistro) {
+              totalVolMedido = totalVolMedido + cuenca[i].presa[j].registro[k].volumenMedido;
+              }
+              }
+            }
+          }}
+          media = (totalVolMedido*100)/totalVolMax;
+          printf("\t\t  TODAS      |    TOTAL    |   %d - %d%c  |---------- \n",totalVolMedido,media,37);
+  }
+  system("pause");
 }
 
 /** Comprobacion de que la fecha es anterior a la fecha actual **/

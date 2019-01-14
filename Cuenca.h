@@ -14,6 +14,7 @@ typedef struct TipoRegistro {
   int volumenMedido;
   TipoFecha fecha;
   bool contieneDatos;
+  bool ultimoRegistro;
 };
 
 typedef struct TipoPresa {
