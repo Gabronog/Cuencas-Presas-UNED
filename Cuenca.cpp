@@ -448,3 +448,58 @@ bool TipoFecha::comprobarBisiesto() { //Función que comprueba si el año es bisie
     return false;
   }
 }
+
+int TipoFecha::CalcularDiaSemana(){
+  int a=0;
+  int y=0;
+  int m=0;
+  int d=0;
+
+  a = (14 - mes) / 12;
+  y = anio - a;
+  m = mes + 12 * a - 2;
+
+  d = ((1 + y + y/4 - y/100 + y/400 + (31*m)/12) % 7);
+
+  if(d==0){ //con Zeller el Domingo toma valor 0, nos interesa que valga 7.
+    d=7;
+  }
+  return d;
+}
+
+int TipoFecha::DiasTieneMes(){
+
+  switch (MesIntroducido) {
+    case 1: printf("ENERO%22d\n",AnnoIntroducido); return 31; break;
+    case 2: printf("FEBRERO%20d\n",AnnoIntroducido);
+            if (Bisiesto()==true) { return 29; } //si bisiesto es true, devolvera 29 dias.
+            else { return 28; }                //si bisiesto es false, devolvera 28 dias.
+            break;
+    case 3: printf("MARZO%22d\n",AnnoIntroducido); return 31; break;
+    case 4: printf("ABRIL%22d\n",AnnoIntroducido); return 30; break;
+    case 5: printf("MAYO%23d\n",AnnoIntroducido); return 31; break;
+    case 6: printf("JUNIO%22d\n",AnnoIntroducido); return 30; break;
+    case 7: printf("JULIO%22d\n",AnnoIntroducido); return 3j1; break;
+    case 8: printf("AGOSTO%21d\n",AnnoIntroducido); return 31; break;
+    case 9: printf("SEPTIEMBRE%17d\n",AnnoIntroducido); return 30; break;
+    case 10: printf("OCTUBRE%20d\n",AnnoIntroducido); return 31; break;
+    case 11: printf("NOVIEMBRE%18d\n",AnnoIntroducido); return 30; break;
+    case 12: printf("DICIEMBRE%18d\n",AnnoIntroducido); return 31; break;
+    }
+}
+
+void TipoDato::DibujarCalendario(){
+  int posicion;
+  DiaSemana = CalcularDiaSemana();
+  printf ("LU  MA  MI  JU  VI | SA  DO\n");
+  for (int i=1; i<; i++){
+    printf (" . ");          //desde 1 hasta el primer dia de la semana escribe " . "
+    if (posicion%7==5){      //Si estamos en la quinta posicion (es decir viernes)
+      printf ("|");          //tenemos que poner "|"
+      }
+    printf (" ");            //espacio entre posiciones
+    posicion=posicion+1;     //Sumamos 1 a la posicion para representar los 7 dias de la semana.
+  }
+
+
+  }

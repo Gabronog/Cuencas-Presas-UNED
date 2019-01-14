@@ -8,6 +8,8 @@ typedef struct TipoFecha {
 
   bool comprobarBisiesto();
   bool comprobarFecha();
+  int CalcularDiaSemana();
+  int DiasTieneMes();
 };
 
 typedef struct TipoRegistro {
