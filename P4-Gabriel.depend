@@ -9,9 +9,10 @@
 
 1547548260 c:\prk\p4-gabriel\cuenca.h
 
-1547556296 source:c:\prk\p4-gabriel\cuenca.cpp
+1547559980 source:c:\prk\p4-gabriel\cuenca.cpp
 	<stdio.h>
 	"Cuenca.h"
 	<ctype.h>
 	<windows.h>
+	<conio.h>
 

@@ -2,7 +2,7 @@
 #include "Cuenca.h"
 #include <ctype.h>
 #include <windows.h>
-
+#include <conio.h>
 
 void TipoDato::verRegistros() {
   for (int i=0; i<3; i++) {
@@ -113,7 +113,7 @@ Introducir datos de las mediciones a una presa
 Como pueden haber 2 presas con el mismo nombre en cuencas distintas
 solicitaremos tambien la cuenca para introducir una medición **/
 void TipoDato::introducirMedicion() {
-  int volumenMedido, anio, dia, mes;
+  int volumenMedido, anio, dia, mes,contador;
   TipoNombre nombrePresa, nombreCuenca;
   TipoFecha fecha;
   bool cuencaEncontrada = false;
@@ -153,10 +153,22 @@ void TipoDato::introducirMedicion() {
   printf("\t\t             Volumen medido en la Presa: %d                     \n",volumenMedido);
   printf("\t\t     Por favor introduzca el dia que se produjo la medicion  \n");
   printf("\t\t.......................................................... \n");
-  do {
+  dia = 0;
+  contador = 0;
+  while (dia>31 || dia<1) {
+    contador++;
+    if (contador == 50) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
     printf("\t\t\n>>> ");
     scanf("%d",&dia);
-  } while (dia>31 || dia<1);
+    if (dia>31 || dia<1) {
+      printf("%d no es valido",dia);
+    }
+  }
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -166,10 +178,22 @@ void TipoDato::introducirMedicion() {
   printf("\t\t             Dia de la medicion: %d                     \n",dia);
   printf("\t\t     Por favor introduzca el mes que se produjo la medicion  \n");
   printf("\t\t.......................................................... \n");
-  do {
+  mes = 0;
+  contador = 0;
+  while (mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31)) {
+    contador++;
+    if (contador == 50) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
     printf("\t\t\n>>> ");
     scanf("%d",&mes);
-  } while (mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31));
+    if (mes<1 || mes>12) {
+      printf("%d no es valido",mes);
+    }
+  }
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -180,8 +204,20 @@ void TipoDato::introducirMedicion() {
   printf("\t\t             Mes de la medicion: %d                     \n",mes);
   printf("\t\t     Por favor introduzca el a%co que se produjo la medicion  \n",164);
   printf("\t\t.......................................................... \n");
-  printf("\t\t\n>>> ");
-  scanf("%d",&anio);
+  contador = 0;
+  anio = 0;
+  while (anio<=0) {
+    contador++;
+    printf("\t\t\n>>> ");
+    scanf("%d",&anio);
+    if (contador == 50 || anio > 50000) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
+
+  }
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -257,7 +293,7 @@ void TipoDato::introducirMedicion() {
 
 void TipoDato::comprobarRegistros() {
 
-  int anio, dia, mes, media;
+  int anio, dia, mes, media,contador;
   int totalVolMax = 0;
   int totalVolMedido = 0;
   TipoNombre nombrePresa, nombreCuenca;
@@ -289,10 +325,22 @@ void TipoDato::comprobarRegistros() {
   printf("\t\t             Nombre de la Presa: %s                      \n",nombrePresa);
   printf("\t     Por favor introduzca el dia a partir del cual quiere consultar las mediciones  \n");
   printf("\t\t.......................................................... \n");
-  do {
+  dia = 0;
+  contador = 0;
+  while (dia>31 || dia<1) {
+    contador++;
+    if (contador == 50) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
     printf("\t\t\n>>> ");
     scanf("%d",&dia);
-  } while (dia>31 || dia<1);
+    if (dia>31 || dia<1) {
+      printf("%d no es valido",dia);
+    }
+  }
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t                  Consulta de mediciones                      \n");
@@ -301,10 +349,22 @@ void TipoDato::comprobarRegistros() {
   printf("\t\t             Dia inicial de consulta de las mediciones: %d                     \n",dia);
   printf("\t     Por favor introduzca el mes a partir del cual quiere consultar las mediciones  \n");
   printf("\t\t.......................................................... \n");
-  do {
+  mes = 0;
+  contador = 0;
+  while (mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31)) {
+    contador++;
+    if (contador == 50) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
     printf("\t\t\n>>> ");
     scanf("%d",&mes);
-  } while (mes>12 || mes<1 || (dia>29 && mes == 2)||((mes == 6 || mes==4||mes==11||mes==9) && dia==31));
+    if (mes<1 || mes>12) {
+      printf("%d no es valido",mes);
+    }
+  }
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t               Alta de cuenca/Presa               \n");
@@ -315,7 +375,20 @@ void TipoDato::comprobarRegistros() {
   printf("\t     Por favor introduzca el a%co a partir del cual quiere consultar las mediciones  \n",164);
   printf("\t\t.......................................................... \n");
   printf("\t\t\n>>> ");
-  scanf("%d",&anio);
+  contador = 0;
+  anio = 0;
+  while (anio<=0) {
+    contador++;
+    printf("\t\t\n>>> ");
+    scanf("%d",&anio);
+    if (contador == 50 || anio > 50000) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
+
+  }
   system("@cls||clear");
   printf("\n\n\t\t.......................................................... \n");
   printf("\t\t                  Consulta de mediciones                      \n");
@@ -471,10 +544,9 @@ int TipoFecha::calcularDiaSemana() {
 }
 
 int TipoFecha::diasTieneMes() {
-
   switch (mes) {
-  case 1: printf("Enero%22d\n",anio); return 31; break;
-  case 2: printf("Febrero%20d\n",anio);
+  case 1: printf("\t\tEnero%22d\n",anio); return 31; break;
+  case 2: printf("\t\tFebrero%20d\n",anio);
     if (comprobarBisiesto()==true) {
       return 29;
     } //si bisiesto es true, devolvera 29 dias.
@@ -482,21 +554,21 @@ int TipoFecha::diasTieneMes() {
       return 28;
     }                //si bisiesto es false, devolvera 28 dias.
     break;
-  case 3: printf("Marzo%22d\n",anio); return 31; break;
-  case 4: printf("Abril%22d\n",anio); return 30; break;
-  case 5: printf("Mayo%23d\n",anio); return 31; break;
-  case 6: printf("Junio%22d\n",anio); return 30; break;
-  case 7: printf("Julio%22d\n",anio); return 31; break;
-  case 8: printf("Agosto%21d\n",anio); return 31; break;
-  case 9: printf("Septiembre%17d\n",anio); return 30; break;
-  case 10: printf("Octubre%20d\n",anio); return 31; break;
-  case 11: printf("Noviembre%18d\n",anio); return 30; break;
-  case 12: printf("Diciembre%18d\n",anio); return 31; break;
+  case 3: printf("\t\tMarzo%22d\n",anio); return 31; break;
+  case 4: printf("\t\tAbril%22d\n",anio); return 30; break;
+  case 5: printf("\t\tMayo%23d\n",anio); return 31; break;
+  case 6: printf("\t\tJunio%22d\n",anio); return 30; break;
+  case 7: printf("\t\tJulio%22d\n",anio); return 31; break;
+  case 8: printf("\t\tAgosto%21d\n",anio); return 31; break;
+  case 9: printf("\t\tSeptiembre%17d\n",anio); return 30; break;
+  case 10: printf("\t\tOctubre%20d\n",anio); return 31; break;
+  case 11: printf("\t\tNoviembre%18d\n",anio); return 30; break;
+  case 12: printf("\t\tDiciembre%18d\n",anio); return 31; break;
   }
 }
 
 void TipoDato::dibujarCalendario() {
-  int posicion, mes, anio, diaPorMes, diaDibujado, diaSemana,diasPorMes,numerodeCuenca,numerodePresa,variacion;
+  int posicion, mes,contador, anio, diaPorMes, diaDibujado, diaSemana,diasPorMes,numerodeCuenca,numerodePresa,variacion;
   TipoFecha fecha;
   TipoNombre nombreCuenca, nombrePresa;
   bool cuencaRegistrada = false;
@@ -508,19 +580,46 @@ void TipoDato::dibujarCalendario() {
   printf("\t\t.......................................................... \n");
   printf("\t\t:               Variacion de mediciones                  :\n");
   printf("\t\t:    Por favor introduzca el mes que desea consultar     :\n");
+  printf("\t\t:    NO SE PUEDEN INTRODUCIR VALORES TIPO CHAR           :\n");
   printf("\t\t.......................................................... \n");
-  do {
+  mes = 0;
+  contador = 0;
+  while (mes<1 || mes>12) {
+    contador++;
+    if (contador == 50) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
     printf("\t\t\n>>> ");
     scanf("%d",&mes);
-  } while (mes>12 || mes<1);
+    if (mes<1 || mes>12) {
+      printf("%d no es valido",mes);
+    }
+  }
+
   system("@cls || clear");
   printf("\t\t.......................................................... \n");
   printf("\t\t                Variacion de mediciones                    \n");
   printf("\t\t     Mes de consulta de las mediciones: %d            \n",mes);
   printf("\t\t     Por favor introduzca el a%co que desea consultar      \n",164);
+  printf("\t\t     NO SE PUEDEN INTRODUCIR VALORES TIPO CHAR             \n");
   printf("\t\t.......................................................... \n");
   printf("\n\t\t>>> ");
-  scanf("%d",&anio);
+  contador = 0;
+  anio = 0;
+  while (anio<=0) {
+    contador++;
+    scanf("%d",&anio);
+    if (contador == 50 || anio > 50000) {
+      system("@cls || clear");
+      printf("\n\nError fatal, violacion de tipo.");
+      system("pause");
+      return;
+    }
+
+  }
   system("@cls || clear");
   printf("\t\t.......................................................... \n");
   printf("\t\t                Variacion de mediciones                    \n");
@@ -545,17 +644,6 @@ void TipoDato::dibujarCalendario() {
   fecha.mes = mes;
   fecha.anio = anio;
   diaSemana = fecha.calcularDiaSemana();
-  diasPorMes = fecha.diasTieneMes();
-  printf ("LU  MA  MI  JU  VI | SA  DO\n");
-  for (int i=1; i<diaSemana; i++) {
-    printf (" . ");          //desde 1 hasta el primer dia de la semana escribe " . "
-    if (posicion%7==5) {     //Si estamos en la quinta posicion (es decir viernes)
-      printf ("|");          //tenemos que poner "|"
-    }
-    printf (" ");            //espacio entre posiciones
-    posicion=posicion+1;     //Sumamos 1 a la posicion para representar los 7 dias de la semana.
-  }
-
   for (int i=0;i<3;i++) {
     if (strcmp(cuenca[i].nombreCuenca,nombreCuenca)==0) {
       cuencaRegistrada = true;
@@ -571,6 +659,28 @@ void TipoDato::dibujarCalendario() {
       }
     }
   }
+
+  system("@cls || clear");
+  printf("\n\n");
+  printf("\t\t Variacion Agua Embalsada\n\n");
+  if (presaRegistrada) {
+    printf("\tCuenca: %s \t - \t Presa: %s\n",nombreCuenca,nombrePresa);
+  } else if (cuencaRegistrada) {
+    printf("\tCuenca: %s \t - \t Presa: TODAS\n",nombreCuenca,nombrePresa);
+  } else {
+    printf("\tCuenca: TODAS \t - \t Presa: TODAS\n",nombreCuenca,nombrePresa);
+  }
+  diasPorMes = fecha.diasTieneMes();
+  printf ("\t\tLU  MA  MI  JU  VI | SA  DO\n");
+  printf("\t\t");
+  for (int i=1; i<diaSemana; i++) {
+    printf (" . ");          //desde 1 hasta el primer dia de la semana escribe " . "
+    if (posicion%7==5) {     //Si estamos en la quinta posicion (es decir viernes)
+      printf ("|");          //tenemos que poner "|"
+    }
+    printf (" ");            //espacio entre posiciones
+    posicion=posicion+1;     //Sumamos 1 a la posicion para representar los 7 dias de la semana.
+  }
   for (int i=1; i<diasPorMes;i++) {
     if (cuencaRegistrada) {
       if (presaRegistrada) {
@@ -585,7 +695,7 @@ void TipoDato::dibujarCalendario() {
             if (cuenca[numerodeCuenca].presa[numerodePresa].registro[k].volumenMedido != cuenca[numerodeCuenca].presa[numerodePresa].registro[k-1].volumenMedido &&
                 (((cuenca[numerodeCuenca].presa[numerodePresa].registro[k].volumenMedido - cuenca[numerodeCuenca].presa[numerodePresa].registro[k-1].volumenMedido)*100)/cuenca[numerodeCuenca].presa[numerodePresa].volumenMax) != 0) {
               variacion = (((cuenca[numerodeCuenca].presa[numerodePresa].registro[k].volumenMedido - cuenca[numerodeCuenca].presa[numerodePresa].registro[k-1].volumenMedido)*100)/cuenca[numerodeCuenca].presa[numerodePresa].volumenMax);
-              if (variacion >= 9) {
+              if (variacion >= 9 || variacion<= -9) {
                 printf("EE");
               } else {
                 printf("%d",variacion);
@@ -599,7 +709,7 @@ void TipoDato::dibujarCalendario() {
           printf("--");
         }
         if (posicion%7==0) {     //si la posicion es 7(domingo) tenemos que saltar de linea
-          printf("\n");
+          printf("\n\t\t");
         } else if (posicion%7==5) { //si la posicion es 5(Viernes) tenemos que poner " | "
           printf (" | ");
         } else {
@@ -607,6 +717,10 @@ void TipoDato::dibujarCalendario() {
         }
         posicion = posicion +1;
         registroEncontrado = false;
+      } else {
+        /** La cuenca existe en nuestros registros pero la presa no
+            Mostraremos la variacion mensual de la cuenca
+        **/
       }
     }
   }
