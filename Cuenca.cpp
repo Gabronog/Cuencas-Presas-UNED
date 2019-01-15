@@ -496,12 +496,12 @@ int TipoFecha::diasTieneMes() {
 }
 
 void TipoDato::dibujarCalendario() {
-  int posicion, mes, anio;
+  int posicion, mes, anio, diaPorMes, diaDibujado, diaSemana,diasPorMes,numerodeCuenca,numerodePresa,variacion;
   TipoFecha fecha;
   TipoNombre nombreCuenca, nombrePresa;
-  int diaSemana;
-  int diaDibujado;
-
+  bool cuencaRegistrada = false;
+  bool presaRegistrada = false;
+  bool registroEncontrado = false;
 
   system("@cls || clear");
   printf("\n\n");
@@ -530,12 +530,24 @@ void TipoDato::dibujarCalendario() {
   printf("\t\t.......................................................... \n");
   printf("\n\t\t>>> ");
   scanf("%s",nombreCuenca);
+  system("@cls || clear");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t                Variacion de mediciones                    \n");
+  printf("\t\t     Mes de consulta de las mediciones: %d            \n",mes);
+  printf("\t\t     A%co de consulta de las mediciones: %d            \n",164,anio);
+  printf("\t\t             Nombre de la cuenca: %s                      \n",nombreCuenca);
+  printf("\t\t:    Por favor introduzca el nombre de la presa      :\n");
+  printf("\t\t.......................................................... \n");
+  printf("\n\t\t>>> ");
+  scanf("%s",nombrePresa);
 
+  posicion=1;
   fecha.mes = mes;
   fecha.anio = anio;
   diaSemana = fecha.calcularDiaSemana();
+  diasPorMes = fecha.diasTieneMes();
   printf ("LU  MA  MI  JU  VI | SA  DO\n");
-  for (int i=1; i<DiaSemana; i++) {
+  for (int i=1; i<diaSemana; i++) {
     printf (" . ");          //desde 1 hasta el primer dia de la semana escribe " . "
     if (posicion%7==5) {     //Si estamos en la quinta posicion (es decir viernes)
       printf ("|");          //tenemos que poner "|"
@@ -543,9 +555,60 @@ void TipoDato::dibujarCalendario() {
     printf (" ");            //espacio entre posiciones
     posicion=posicion+1;     //Sumamos 1 a la posicion para representar los 7 dias de la semana.
   }
+
   for (int i=0;i<3;i++) {
-
-
+    if (strcmp(cuenca[i].nombreCuenca,nombreCuenca)==0) {
+      cuencaRegistrada = true;
+      numerodeCuenca = i;
+      for (int j=0;j<5;j++) {
+        if (strcmp(cuenca[i].presa[j].nombrePresa,nombrePresa)==0) {
+          /** Existen registros de la presa y de la cuenca
+              Mostraremos las variaciones de los registros de la presa
+          **/
+          presaRegistrada = true;
+          numerodePresa = j;
+        }
+      }
+    }
+  }
+  for (int i=1; i<diasPorMes;i++) {
+    if (cuencaRegistrada) {
+      if (presaRegistrada) {
+        /** Tanto la cuenca como la presa existen en nuestros registros **/
+        for (int k=0;k<100;k++) {
+          if (k!=0 &&
+              cuenca[numerodeCuenca].presa[numerodePresa].registro[k].contieneDatos &&
+              cuenca[numerodeCuenca].presa[numerodePresa].registro[k].fecha.mes == fecha.mes &&
+              cuenca[numerodeCuenca].presa[numerodePresa].registro[k].fecha.anio == fecha.anio &&
+              cuenca[numerodeCuenca].presa[numerodePresa].registro[k].fecha.dia == i) {
+            registroEncontrado = true;
+            if (cuenca[numerodeCuenca].presa[numerodePresa].registro[k].volumenMedido != cuenca[numerodeCuenca].presa[numerodePresa].registro[k-1].volumenMedido &&
+                (((cuenca[numerodeCuenca].presa[numerodePresa].registro[k].volumenMedido - cuenca[numerodeCuenca].presa[numerodePresa].registro[k-1].volumenMedido)*100)/cuenca[numerodeCuenca].presa[numerodePresa].volumenMax) != 0) {
+              variacion = (((cuenca[numerodeCuenca].presa[numerodePresa].registro[k].volumenMedido - cuenca[numerodeCuenca].presa[numerodePresa].registro[k-1].volumenMedido)*100)/cuenca[numerodeCuenca].presa[numerodePresa].volumenMax);
+              if (variacion >= 9) {
+                printf("EE");
+              } else {
+                printf("%d",variacion);
+              }
+            } else {
+              printf("00");
+            }
+          }
+        }
+        if (registroEncontrado == false) {
+          printf("--");
+        }
+        if (posicion%7==0) {     //si la posicion es 7(domingo) tenemos que saltar de linea
+          printf("\n");
+        } else if (posicion%7==5) { //si la posicion es 5(Viernes) tenemos que poner " | "
+          printf (" | ");
+        } else {
+          printf("  ");
+        }
+        posicion = posicion +1;
+        registroEncontrado = false;
+      }
+    }
   }
   system("Pause");
 }
