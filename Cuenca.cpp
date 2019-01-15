@@ -119,7 +119,7 @@ void TipoDato::introducirMedicion() {
   bool cuencaEncontrada = false;
   bool presaEncontrada = false;
   bool escrito = false;
-
+/** Impresion de los menus **/
   printf("\n\n");
   printf("\t\t..........................................................\n");
   printf("\t\t:                    Nueva medicion                      :\n");
@@ -231,6 +231,11 @@ void TipoDato::introducirMedicion() {
   fecha.anio = anio;
   fecha.mes = mes;
   fecha.dia = dia;
+
+
+
+
+  /** Insertar medicion **/
   for (int i=0;i<3;i++) {
     if (cuenca[i].contieneDatos==true && escrito == false) {
       //Hay alguna cuenca almacenada con el mismo nombre?
@@ -243,11 +248,6 @@ void TipoDato::introducirMedicion() {
             if (cuenca[i].presa[j].volumenMax>=volumenMedido) {
               for (int k=0;k<100;k++) {
                 if (cuenca[i].presa[j].registro[k].contieneDatos == false && escrito == false) {
-                  /*
-                    Comprobamos
-
-
-                  */
                   if (k == 0 ||
                       (cuenca[i].presa[j].registro[k-1].fecha.anio < fecha.anio) ||
                       ((cuenca[i].presa[j].registro[k-1].fecha.anio == fecha.anio) && (cuenca[i].presa[j].registro[k-1].fecha.mes < fecha.mes)) ||
@@ -568,7 +568,7 @@ int TipoFecha::diasTieneMes() {
 }
 
 void TipoDato::dibujarCalendario() {
-  int posicion, mes,contador, anio, diaPorMes, diaDibujado, diaSemana,diasPorMes,numerodeCuenca,numerodePresa,variacion;
+  int posicion, mes,contador, anio, diasPorMes,diaSemana,numerodeCuenca,numerodePresa,variacion,volumenRegistroAnterior,volumenMedidoTotal,volumenMaxTotal;
   TipoFecha fecha;
   TipoNombre nombreCuenca, nombrePresa;
   bool cuencaRegistrada = false;
@@ -588,7 +588,7 @@ void TipoDato::dibujarCalendario() {
     contador++;
     if (contador == 50) {
       system("@cls || clear");
-      printf("\n\nError fatal, violacion de tipo.");
+      printf("\n\nError fatal, violacion de tipo.\n");
       system("pause");
       return;
     }
@@ -614,7 +614,7 @@ void TipoDato::dibujarCalendario() {
     scanf("%d",&anio);
     if (contador == 50 || anio > 50000) {
       system("@cls || clear");
-      printf("\n\nError fatal, violacion de tipo.");
+      printf("\n\nError fatal, violacion de tipo.\n");
       system("pause");
       return;
     }
@@ -639,7 +639,8 @@ void TipoDato::dibujarCalendario() {
   printf("\t\t.......................................................... \n");
   printf("\n\t\t>>> ");
   scanf("%s",nombrePresa);
-
+  numerodeCuenca = 0;
+  numerodePresa = 0;
   posicion=1;
   fecha.mes = mes;
   fecha.anio = anio;
@@ -666,9 +667,9 @@ void TipoDato::dibujarCalendario() {
   if (presaRegistrada) {
     printf("\tCuenca: %s \t - \t Presa: %s\n",nombreCuenca,nombrePresa);
   } else if (cuencaRegistrada) {
-    printf("\tCuenca: %s \t - \t Presa: TODAS\n",nombreCuenca,nombrePresa);
+    printf("\tCuenca: %s \t - \t Presa: TODAS\n",nombreCuenca);
   } else {
-    printf("\tCuenca: TODAS \t - \t Presa: TODAS\n",nombreCuenca,nombrePresa);
+    printf("\tCuenca: TODAS \t - \t Presa: TODAS\n");
   }
   diasPorMes = fecha.diasTieneMes();
   printf ("\t\tLU  MA  MI  JU  VI | SA  DO\n");
@@ -684,6 +685,7 @@ void TipoDato::dibujarCalendario() {
   for (int i=1; i<diasPorMes;i++) {
     if (cuencaRegistrada) {
       if (presaRegistrada) {
+        variacion = 0;
         /** Tanto la cuenca como la presa existen en nuestros registros **/
         for (int k=0;k<100;k++) {
           if (k!=0 &&
@@ -698,7 +700,11 @@ void TipoDato::dibujarCalendario() {
               if (variacion >= 9 || variacion<= -9) {
                 printf("EE");
               } else {
-                printf("%d",variacion);
+                if (variacion<0) {
+                  printf("%d",variacion);
+                } else {
+                  printf("+%d",variacion);
+                }
               }
             } else {
               printf("00");
@@ -721,8 +727,108 @@ void TipoDato::dibujarCalendario() {
         /** La cuenca existe en nuestros registros pero la presa no
             Mostraremos la variacion mensual de la cuenca
         **/
+        volumenMaxTotal = 0;
+        volumenMedidoTotal = 0;
+        volumenRegistroAnterior = 0;
+        for (int j=0;j<5;j++) {
+          volumenMaxTotal = volumenMaxTotal + cuenca[numerodeCuenca].presa[j].volumenMax;
+          for (int k=0;k<100;k++) {
+            if (k!=0 &&
+                cuenca[numerodeCuenca].presa[j].registro[k].contieneDatos &&
+                cuenca[numerodeCuenca].presa[j].registro[k].fecha.mes == fecha.mes &&
+                cuenca[numerodeCuenca].presa[j].registro[k].fecha.anio == fecha.anio &&
+                cuenca[numerodeCuenca].presa[j].registro[k].fecha.dia == i) {
+              volumenMedidoTotal = volumenMedidoTotal + cuenca[numerodeCuenca].presa[j].registro[k].volumenMedido;
+              registroEncontrado = true;
+              volumenRegistroAnterior = volumenRegistroAnterior + cuenca[numerodeCuenca].presa[j].registro[k-1].volumenMedido;
+            }
+          }
+        }
+        if (registroEncontrado) {
+          if (volumenMedidoTotal == volumenRegistroAnterior) {
+            printf("00");
+          } else {
+            variacion = 0;
+            variacion = (((volumenMedidoTotal - volumenRegistroAnterior)*100)/volumenMaxTotal);
+            if (variacion>9 || variacion < 9) {
+              printf("EE");
+            } else {
+              if (variacion<0) {
+                printf("%d",variacion);
+              } else {
+                printf("+%d",variacion);
+              }
+            }
+          }
+          registroEncontrado = false;
+        } else {
+          printf("--");
+        }
+        if (posicion%7==0) {     //si la posicion es 7(domingo) tenemos que saltar de linea
+          printf("\n\t\t");
+        } else if (posicion%7==5) { //si la posicion es 5(Viernes) tenemos que poner " | "
+          printf (" | ");
+        } else {
+          printf("  ");
+        }
+        posicion = posicion +1;
       }
+    } else {
+      /** La cuenca existe en nuestros registros pero la presa no
+          Mostraremos la variacion mensual de la cuenca
+      **/
+      volumenMaxTotal = 0;
+      volumenMedidoTotal = 0;
+      volumenRegistroAnterior = 0;
+      for (int l=0; l<3; l++) {
+        for (int j=0;j<5;j++) {
+          volumenMaxTotal = volumenMaxTotal + cuenca[l].presa[j].volumenMax;
+          for (int k=0;k<100;k++) {
+            if (k!=0 &&
+                cuenca[l].presa[j].registro[k].contieneDatos &&
+                cuenca[l].presa[j].registro[k].fecha.mes == fecha.mes &&
+                cuenca[l].presa[j].registro[k].fecha.anio == fecha.anio &&
+                cuenca[l].presa[j].registro[k].fecha.dia == i) {
+              volumenMedidoTotal = volumenMedidoTotal + cuenca[l].presa[j].registro[k].volumenMedido;
+              registroEncontrado = true;
+              volumenRegistroAnterior = volumenRegistroAnterior + cuenca[l].presa[j].registro[k-1].volumenMedido;
+            }
+          }
+        }
+      }
+      if (registroEncontrado) {
+        if (volumenMedidoTotal == volumenRegistroAnterior) {
+          printf("00");
+        } else {
+          variacion = 0;
+          variacion = (((volumenMedidoTotal - volumenRegistroAnterior)*100)/volumenMaxTotal);
+          if (variacion>9 || variacion < -9) {
+            printf("EE");
+          } else {
+            if (variacion<0) {
+              printf("%d",variacion); //Valor negativo el - va incluido
+            } else if (variacion != 0) {
+              printf("+%d",variacion);//Valor positivo hay que incluir el +
+            } else {
+              printf("00");
+            }
+
+          }
+        }
+        registroEncontrado = false;
+      } else {
+        printf("--");
+      }
+      if (posicion%7==0) {     //si la posicion es 7(domingo) tenemos que saltar de linea
+        printf("\n\t\t");
+      } else if (posicion%7==5) { //si la posicion es 5(Viernes) tenemos que poner " | "
+        printf (" | ");
+      } else {
+        printf("  ");
+      }
+      posicion = posicion +1;
     }
+
   }
   system("Pause");
 }
