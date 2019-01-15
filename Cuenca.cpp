@@ -394,25 +394,28 @@ void TipoDato::comprobarRegistros() {
                 }
               }
             }
+            /** Total de la cuenca **/
             media = (totalVolMedido*100)/totalVolMax;
             printf("\t\t  %s       |    TOTAL    |   %d - %d%c  |---------- \n",cuenca[i].nombreCuenca,totalVolMedido,media,37);
           }
         }
       }
     }
-    for(int i=0;i<3;i++){
-    for (int j=0;j<5;j++) {
-      if (cuenca[i].presa[j].contieneDatos) {
-        totalVolMax = totalVolMax + cuenca[i].presa[j].volumenMax;
+    /** Total de todas las cuencas **/
+    for (int i=0;i<3;i++) {
+      for (int j=0;j<5;j++) {
+        if (cuenca[i].presa[j].contieneDatos) {
+          totalVolMax = totalVolMax + cuenca[i].presa[j].volumenMax;
           for (int k = 0 ;k < 100;k++) {
             if (cuenca[i].presa[j].registro[k].contieneDatos && cuenca[i].presa[j].registro[k].ultimoRegistro) {
               totalVolMedido = totalVolMedido + cuenca[i].presa[j].registro[k].volumenMedido;
-              }
-              }
             }
-          }}
-          media = (totalVolMedido*100)/totalVolMax;
-          printf("\t\t  TODAS      |    TOTAL    |   %d - %d%c  |---------- \n",totalVolMedido,media,37);
+          }
+        }
+      }
+    }
+    media = (totalVolMedido*100)/totalVolMax;
+    printf("\t\t  TODAS      |    TOTAL    |   %d - %d%c  |---------- \n",totalVolMedido,media,37);
   }
   system("pause");
 }
@@ -449,7 +452,7 @@ bool TipoFecha::comprobarBisiesto() { //Función que comprueba si el año es bisie
   }
 }
 
-int TipoFecha::CalcularDiaSemana(){
+int TipoFecha::calcularDiaSemana() {
   int a=0;
   int y=0;
   int m=0;
@@ -461,45 +464,88 @@ int TipoFecha::CalcularDiaSemana(){
 
   d = ((1 + y + y/4 - y/100 + y/400 + (31*m)/12) % 7);
 
-  if(d==0){ //con Zeller el Domingo toma valor 0, nos interesa que valga 7.
+  if (d==0) { //con Zeller el Domingo toma valor 0, nos interesa que valga 7.
     d=7;
   }
   return d;
 }
 
-int TipoFecha::DiasTieneMes(){
+int TipoFecha::diasTieneMes() {
 
-  switch (MesIntroducido) {
-    case 1: printf("ENERO%22d\n",AnnoIntroducido); return 31; break;
-    case 2: printf("FEBRERO%20d\n",AnnoIntroducido);
-            if (Bisiesto()==true) { return 29; } //si bisiesto es true, devolvera 29 dias.
-            else { return 28; }                //si bisiesto es false, devolvera 28 dias.
-            break;
-    case 3: printf("MARZO%22d\n",AnnoIntroducido); return 31; break;
-    case 4: printf("ABRIL%22d\n",AnnoIntroducido); return 30; break;
-    case 5: printf("MAYO%23d\n",AnnoIntroducido); return 31; break;
-    case 6: printf("JUNIO%22d\n",AnnoIntroducido); return 30; break;
-    case 7: printf("JULIO%22d\n",AnnoIntroducido); return 3j1; break;
-    case 8: printf("AGOSTO%21d\n",AnnoIntroducido); return 31; break;
-    case 9: printf("SEPTIEMBRE%17d\n",AnnoIntroducido); return 30; break;
-    case 10: printf("OCTUBRE%20d\n",AnnoIntroducido); return 31; break;
-    case 11: printf("NOVIEMBRE%18d\n",AnnoIntroducido); return 30; break;
-    case 12: printf("DICIEMBRE%18d\n",AnnoIntroducido); return 31; break;
-    }
+  switch (mes) {
+  case 1: printf("Enero%22d\n",anio); return 31; break;
+  case 2: printf("Febrero%20d\n",anio);
+    if (comprobarBisiesto()==true) {
+      return 29;
+    } //si bisiesto es true, devolvera 29 dias.
+    else {
+      return 28;
+    }                //si bisiesto es false, devolvera 28 dias.
+    break;
+  case 3: printf("Marzo%22d\n",anio); return 31; break;
+  case 4: printf("Abril%22d\n",anio); return 30; break;
+  case 5: printf("Mayo%23d\n",anio); return 31; break;
+  case 6: printf("Junio%22d\n",anio); return 30; break;
+  case 7: printf("Julio%22d\n",anio); return 31; break;
+  case 8: printf("Agosto%21d\n",anio); return 31; break;
+  case 9: printf("Septiembre%17d\n",anio); return 30; break;
+  case 10: printf("Octubre%20d\n",anio); return 31; break;
+  case 11: printf("Noviembre%18d\n",anio); return 30; break;
+  case 12: printf("Diciembre%18d\n",anio); return 31; break;
+  }
 }
 
-void TipoDato::DibujarCalendario(){
-  int posicion;
-  DiaSemana = CalcularDiaSemana();
+void TipoDato::dibujarCalendario() {
+  int posicion, mes, anio;
+  TipoFecha fecha;
+  TipoNombre nombreCuenca, nombrePresa;
+  int diaSemana;
+  int diaDibujado;
+
+
+  system("@cls || clear");
+  printf("\n\n");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t:               Variacion de mediciones                  :\n");
+  printf("\t\t:    Por favor introduzca el mes que desea consultar     :\n");
+  printf("\t\t.......................................................... \n");
+  do {
+    printf("\t\t\n>>> ");
+    scanf("%d",&mes);
+  } while (mes>12 || mes<1);
+  system("@cls || clear");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t                Variacion de mediciones                    \n");
+  printf("\t\t     Mes de consulta de las mediciones: %d            \n",mes);
+  printf("\t\t     Por favor introduzca el a%co que desea consultar      \n",164);
+  printf("\t\t.......................................................... \n");
+  printf("\n\t\t>>> ");
+  scanf("%d",&anio);
+  system("@cls || clear");
+  printf("\t\t.......................................................... \n");
+  printf("\t\t                Variacion de mediciones                    \n");
+  printf("\t\t     Mes de consulta de las mediciones: %d            \n",mes);
+  printf("\t\t     A%co de consulta de las mediciones: %d            \n",164,anio);
+  printf("\t\t:    Por favor introduzca el nombre de la cuenca      :\n");
+  printf("\t\t.......................................................... \n");
+  printf("\n\t\t>>> ");
+  scanf("%s",nombreCuenca);
+
+  fecha.mes = mes;
+  fecha.anio = anio;
+  diaSemana = fecha.calcularDiaSemana();
   printf ("LU  MA  MI  JU  VI | SA  DO\n");
-  for (int i=1; i<; i++){
+  for (int i=1; i<DiaSemana; i++) {
     printf (" . ");          //desde 1 hasta el primer dia de la semana escribe " . "
-    if (posicion%7==5){      //Si estamos en la quinta posicion (es decir viernes)
+    if (posicion%7==5) {     //Si estamos en la quinta posicion (es decir viernes)
       printf ("|");          //tenemos que poner "|"
-      }
+    }
     printf (" ");            //espacio entre posiciones
     posicion=posicion+1;     //Sumamos 1 a la posicion para representar los 7 dias de la semana.
   }
+  for (int i=0;i<3;i++) {
 
 
   }
+  system("Pause");
+}

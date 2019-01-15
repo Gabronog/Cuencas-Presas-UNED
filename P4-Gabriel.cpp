@@ -91,6 +91,7 @@ char analizarRespuesta(TipoDato &dato,char r) {
     break;
   case 'N': system("@cls||clear"); fflush(stdin); dato.introducirMedicion(); Sleep(1000);
     break;
+  case 'V': dato.dibujarCalendario();break;
   }
   return charSalida;
 }

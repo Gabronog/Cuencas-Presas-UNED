@@ -2,12 +2,12 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
 	<File name="Cuenca.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="22975" topLine="49" />
+		<Cursor position="23309" topLine="451" />
 	</File>
 	<File name="Cuenca.h" open="1" top="0" tabpos="3">
-		<Cursor position="318" topLine="0" />
+		<Cursor position="942" topLine="12" />
 	</File>
 	<File name="P4-Gabriel.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="2748" topLine="78" />
+		<Cursor position="2748" topLine="77" />
 	</File>
 </CodeBlocks_layout_file>

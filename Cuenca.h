@@ -8,8 +8,9 @@ typedef struct TipoFecha {
 
   bool comprobarBisiesto();
   bool comprobarFecha();
-  int CalcularDiaSemana();
   int DiasTieneMes();
+  int calcularDiaSemana();
+  int diasTieneMes();
 };
 
 typedef struct TipoRegistro {
@@ -34,9 +35,7 @@ typedef struct TipoCuenca {
   TipoNombre nombreCuenca;
   bool contieneDatos;
 };
-
 typedef TipoCuenca TipoDatoCuenca [3];
-
 typedef struct TipoDato {
   TipoDatoCuenca cuenca;
 
@@ -45,4 +44,6 @@ typedef struct TipoDato {
   void verRegistros();
   void introducirMedicion();
   void comprobarRegistros();
+  void dibujarCalendario();
+
 };
